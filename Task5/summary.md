@@ -1,0 +1,34 @@
+
+
+Comparing Node.js Modules: http, https, and http2:
+
+1\) purpose of each module
+
+&nbsp;http: enable create a server or send requests using the standard HTTP/1.1 protocol — no encryption or extra security.
+
+&nbsp;https: Same as `http` but with TLS/SSL encryption, so the data between the server and the client is secure.
+
+&nbsp;http2: Uses the newer HTTP/2 protocol, which improves speed and performance by sending multiple requests in the same connection and compressing data.
+
+
+
+2\) Key technical differences between HTTP/1.1 and HTTP/2
+
+HTTP/1.1: Each request is sent separately; a slow request can block others.
+
+HTTP/2: Multiple requests can run at the same time over a single connection (multiplexing) — much faster.
+
+HTTP/2 compresses headers and supports \*\*Server Push\*\*, where the server can send files before the client asks for them.
+
+
+
+3\)When to Use Each
+
+http: For testing, small internal services, or when security is not needed.
+
+https: For public-facing websites or services that need to protect user data.
+
+http2: For large projects, high-performance APIs, or apps that need faster load times.
+
+
+
