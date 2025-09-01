@@ -1,0 +1,55 @@
+explanation of Iteration protocols and generator on js
+ 1.Iteration protocols:
+ It's protocol on js that allowe objects to define their iteration on special way 
+such as using for .. of it . so it structured and flexible way to access elements inside objects like Array, String, or any custom object you build — without needing to use traditional for or while loop
+use symbol.iterator method that define how the object iterated and  method must return an iterator object.The iterator object must have a next() method.It keeps returning values until done: true.
+next() returns an object like:
+{ value: ..., done: true/false }
+
+the different between using loop and Iteration protocols
+When you use for...of, JavaScript automatically calls the object's [Symbol.iterator]() method.and the usefull of using it if we have objects we need to works as array
+
+see the following example  
+const myIterable = {
+  data: ['A', 'B', 'C'],
+  [Symbol.iterator]() {
+    let index = 0;
+    return {
+      next: () => {
+        if (index < this.data.length) {
+          return { value: this.data[index++], done: false };
+        } else {
+          return { done: true };
+        }
+      }
+    };
+  }
+}
+for (const letter of myIterable) {
+  console.log(letter);
+} 
+2.Generators 
+object is returned by a generator function and it conforms to both the iterable protocol and the iterator protocol.
+generator is a subclass of the hidden Iterator class.
+we write it before name  *
+we uses the yield keyword to pause execution and output a value
+Each call to .next() resumes the function until it hits the next yield or returns
+he .next() method returns an object:
+{ value: any, done: boolean }, where:
+value is the yielded value
+done indicates whether the generator has finished (true when done
+it return value when u needed so it save the momory and combine the benefits of functions and iterators, making iteration easier and more flexible.
+
+
+example 
+function* generator() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+const gen = generator();
+
+console.log(gen.next().value); 
+console.log(gen.next().value);
+console.log(gen.next().value); 
