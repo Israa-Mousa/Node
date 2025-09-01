@@ -1,10 +1,10 @@
-export interface DatabaseEntity {
+export interface DatabaseEntity  {
   id: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export class GenericRepository<T extends DatabaseEntity> {
+export class GenericRepository<T extends DatabaseEntity > {
   private items: T[] = [];
 
   findAll(): T[] {

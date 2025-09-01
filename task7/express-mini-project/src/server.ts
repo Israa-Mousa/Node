@@ -1,18 +1,22 @@
-import express from "express";
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config();
+import express, {Request,Response, NextFunction } from "express";
+import { getEnvOrThrow } from "./shared/utils/utils";
+import { handleError } from './shared/utils/exception';
 
 const app = express();
-
-// لتقدر تقرأ JSON من body الطلبات
+const PORT = getEnvOrThrow('PORT');
+console.log('process.env.PORT',process.env.PORT);
 app.use(express.json());
 
-// نقطة اختبار GET
 app.get("/", (_req, res) => {
   res.json({ ok: true, message: "Express + TS server is running 🎉" });
 });
 
-// تشغيل السيرفر
-const PORT = process.env.PORT || 4000;
+app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+  handleError(error, res);
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
 });
