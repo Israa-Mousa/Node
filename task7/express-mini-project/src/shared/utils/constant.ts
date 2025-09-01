@@ -1,6 +1,6 @@
 export const MODULES_NAMES = {
   auth: 'AUTH',
-  user: 'USER'
+  user: 'USER',
   course: 'COURSE'
 } as const;
 

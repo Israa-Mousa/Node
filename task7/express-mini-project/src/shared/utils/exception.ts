@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-// import ModuleNameType from the correct path
 import { ModuleNameType } from './constant';
 import { ErrorStatusCode} from './util.types';
 export class CustomError extends Error {
