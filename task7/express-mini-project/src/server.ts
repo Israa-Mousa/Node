@@ -1,18 +1,29 @@
 import dotenv from "dotenv";
 dotenv.config();
-import express, {Request,Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { getEnvOrThrow } from "./shared/utils/utils";
 import { handleError } from './shared/utils/exception';
+import { userRouter } from "./users/user.route";
+import { responseEnhancer } from "./shared/middlewares/response.middleware";
 
 const app = express();
 const PORT = getEnvOrThrow('PORT');
-console.log('process.env.PORT',process.env.PORT);
+
+// Apply the responseEnhancer middleware here
+app.use(responseEnhancer);
+
 app.use(express.json());
 
 app.get("/", (_req, res) => {
   res.json({ ok: true, message: "Express + TS server is running 🎉" });
 });
 
+console.log('process.env.xxxxx', process.env.PORT);
+
+// Now apply userRouter routes
+app.use('/api/v1/users', userRouter);
+
+// Error handler middleware should be at the end
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
   handleError(error, res);
 });

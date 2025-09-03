@@ -21,7 +21,7 @@ namespace Express {
  interface Response{
   create:(data:object)=>this ,
   ok:(data:object)=>this ,
-error:(data:UnifiedApiErrorResponse)=>this;
+ error:(data:UnifiedApiErrorResponse)=>this;
 }
 }
 }
