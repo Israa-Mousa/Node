@@ -1,5 +1,5 @@
 import { User } from "./user.entity";
-import { Role } from "../shared/repositories/role.enum";
+import { Role } from "./role.enum";
 import { userRepository } from "./user.repsitory";
 import argon2 from "argon2";
 
@@ -10,6 +10,10 @@ class UserService {
 
   getUser(id: string): User | undefined {
     return userRepository.findById(id);
+  }
+    public findByEmail(email:string){
+    return  userRepository.findByEmail(email);
+
   }
 
   async createUser(name: string, email: string, password: string, role: string = "STUDENT"): Promise<User> {
@@ -23,8 +27,8 @@ class UserService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-        const hashedPassword = await argon2.hash(password); 
-       const user=userRepository.create( name,email,hashedPassword,userRole);
+       // const hashedPassword = await argon2.hash(password); 
+       const user=userRepository.create( name,email,password,userRole);
        console.log('Created user:', user);
     return user
   }
@@ -42,6 +46,9 @@ class UserService {
 
   deleteUser(id: string): boolean {
     return userRepository.delete(id);
+  }
+    isUserIdExist(id:string):boolean{
+   return !! userRepository.findById(id);
   }
 }
 

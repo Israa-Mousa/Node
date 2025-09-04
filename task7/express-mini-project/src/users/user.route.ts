@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { UserController } from './user.controller';
-// import { isAuthenticated } from '../../middlewares/auth.middleware';  // Assume we have auth middleware
+import { isAuthenticated } from '../shared/middlewares/auth.middleware';
+ // Assume we have auth middleware
 
 console.log('UserController',UserController);
 const router = Router();
 const userController = new UserController();
 
-// router.use(isAuthenticated);  // Make sure the user is authenticated before accessing user routes
+///router.use(isAuthenticated);  // Make sure the user is authenticated before accessing user routes
 
 router.get('/', userController.getUsers);
 

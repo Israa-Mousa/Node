@@ -1,38 +1,45 @@
-import { Role } from '../shared/repositories/role.enum';
+import { createArgonHash } from '../shared/utils/argon.utils';
+import { Role } from './role.enum';
 import { User } from './user.entity';
 
 export class UserRepository {
-  private users: User[] = [
-    {
-      id: 'u1',
-      name: 'Alice Johnson',
-      email: 'alice@example.com',
-      createdAt: new Date('2025-01-01T10:00:00Z'),
-      updatedAt: new Date('2025-01-01T10:00:00Z'),
-      password: 'hashedpassword123',
-      role: Role.ADMIN, 
-    },
-    {
-      id: 'u2',
-      name: 'Bob Smith',
-      email: 'bob@example.com',
-      createdAt: new Date('2025-02-01T12:00:00Z'),
-      updatedAt: new Date('2025-02-01T12:00:00Z'),
-      password: 'hashedpassword123',
-      role: Role.COACH,
-    },
-    {
-      id: 'u3',
-      name: 'Charlie Davis',
-      email: 'charlie@example.com',
-      createdAt: new Date('2025-03-01T14:30:00Z'),
-      updatedAt: new Date('2025-03-01T14:30:00Z'),
-      password: 'hashedpassword123',
-      role: Role.STUDENT,
-    },
-  ];
+  private users: User[] = [];
+  private idCounter = 1;
 
-  private idCounter = 4; 
+  // دالة تهيئة المستخدمين القدامى
+  async init() {
+    this.users = [
+      {
+        id: '1',
+        name: 'Admin',
+        email: 'admin@no.com',
+        password: await createArgonHash('admin123_'),
+        role: Role.ADMIN,
+        createdAt: new Date('2025-01-01T10:00:00Z'),
+        updatedAt: new Date('2025-01-01T10:00:00Z'),
+      },
+      {
+        id: '2',
+        name: 'Belal',
+        email: 'belal@example.com',
+        password: await createArgonHash('belal123'),
+        role: Role.COACH,
+        createdAt: new Date('2025-03-01T14:30:00Z'),
+        updatedAt: new Date('2025-03-01T14:30:00Z'),
+      },
+      {
+        id: '3',
+        name: 'israa',
+        email: 'isra@gmail.com',
+        password: await createArgonHash('israa123'),
+        role: Role.STUDENT,
+        createdAt: new Date('2025-02-01T12:00:00Z'),
+        updatedAt: new Date('2025-02-01T12:00:00Z'),
+      },
+    ];
+
+    this.idCounter = this.users.length + 1;
+  }
 
   findAll(): User[] {
     return this.users;
@@ -46,9 +53,15 @@ export class UserRepository {
     return this.users.find((user) => user.email === email);
   }
 
-  create(name: string, email: string, password: string, role: Role): User {
+  async create(
+    name: string,
+    email: string,
+    originalPassword: string,
+    role: Role
+  ): Promise<User> {
+    const password = await createArgonHash(originalPassword); // تشفير كلمة المرور
     const user: User = {
-      id: this.idCounter.toString(), 
+      id: this.idCounter.toString(),
       name,
       email,
       password,
@@ -57,7 +70,7 @@ export class UserRepository {
       updatedAt: new Date(),
     };
 
-    this.idCounter++;  
+    this.idCounter++;
     this.users.push(user);
     console.log('Created user:', user);
     return user;
@@ -74,8 +87,8 @@ export class UserRepository {
 
     if (name) user.name = name;
     if (email) user.email = email;
-    if (role) user.role = role;  
-    user.updatedAt = new Date(); 
+    if (role) user.role = role;
+    user.updatedAt = new Date();
 
     return user;
   }

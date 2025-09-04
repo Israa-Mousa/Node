@@ -3,6 +3,7 @@ import { ModuleNameType } from './constant';
 import { ErrorStatusCode} from './util.types';
 export class CustomError extends Error {
   public errorType = 'custom';
+    static handleError: any;
   constructor(
     msg: string,
     public moduleName: ModuleNameType,

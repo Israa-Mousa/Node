@@ -1,5 +1,5 @@
 import { DatabaseEntity } from "../shared/repositories/generic.repository";
-import { Role } from "../shared/repositories/role.enum";
+import { Role } from "./role.enum";
 
 export interface User extends DatabaseEntity  {
   name: string;
@@ -7,3 +7,4 @@ export interface User extends DatabaseEntity  {
   password: string;
   role: Role;
 }
+

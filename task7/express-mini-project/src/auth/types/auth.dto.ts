@@ -1,4 +1,4 @@
-import { User } from '../users/user.entity';
+import { User } from  '../../users/user.entity';
 export type RegisterDTO = Pick<User, 'email' | 'password' | 'name' >;
 
 export type LoginDTO = {
@@ -16,3 +16,6 @@ export type UpdateUserProfileDTO = Partial<Pick<User, 'name' | 'email' >>;
 export type GetUserProfileDTO = Omit<User, 'password'>;
 
 export type UserResponseDTO = Omit<User, 'password'>;
+export type RegisterResponseDTO=Omit<User,'password'>;
+
+

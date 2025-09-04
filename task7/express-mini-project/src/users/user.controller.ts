@@ -15,8 +15,10 @@ export class UserController {
     res.ok(users);
   };
 
-  getUser = (req: Request<{ uid: string }>, res: Response) => {
-    const id = req.params.uid;
+  getUser = (req: Request<{ id: string }>, res: Response) => {
+    console.log('req.params', req.params);
+    const id = req.params.id;
+    console.log('id', id);
     if (!id) return res.status(400).json({ error: 'ID required' });
 
     const user = this._userService.getUser(id);
