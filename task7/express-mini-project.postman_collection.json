@@ -496,7 +496,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Advanced Data Structures\",\r\n  \"description\": \"Learn about advanced data structures like AVL trees, B-trees, and heaps.\",\r\n  \"createdBy\": \"admin123\",\r\n  \"image\": \"image-file-name.jpg\" \r\n}\r\n",
+							"raw": "{\r\n  \"title\": \"Advanced Data Structures\",\r\n  \"description\": \"Learn about advanced data structures like AVL trees, B-trees, and heaps.\",\r\n  \"createdBy\": \"admin123\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
