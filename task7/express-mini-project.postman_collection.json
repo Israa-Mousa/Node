@@ -335,74 +335,6 @@
 					"response": []
 				},
 				{
-					"name": "courseUpdatewithImage",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "multipart/form-data",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "title",
-									"value": "Advanced Data coach",
-									"type": "text"
-								},
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/C:/Users/IT USER/Downloads/2xssssssdwq.jpg"
-								},
-								{
-									"key": "description",
-									"value": "Learn about advanced data structures like AVL trees, B-trees, and heaps",
-									"type": "text"
-								},
-								{
-									"key": "mmm",
-									"value": "11",
-									"type": "text",
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "{{baseUrl}}/courses/3",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"courses",
-								"3"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": "israa",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "getAllCourses",
 					"request": {
 						"auth": {
@@ -459,7 +391,7 @@
 					"response": []
 				},
 				{
-					"name": "course‘pdate",
+					"name": "courseUpdate",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -484,12 +416,13 @@
 								{
 									"key": "image",
 									"type": "file",
-									"src": "/C:/Users/IT USER/Downloads/1xccc.jpg"
+									"src": "/C:/Users/IT USER/Downloads/2xssssssdwq.jpg"
 								},
 								{
 									"key": "createdBy",
 									"value": "admin123aa",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "description",
@@ -499,13 +432,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{baseUrl}}/courses/3",
+							"raw": "{{baseUrl}}/courses/2",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"courses",
-								"3"
+								"2"
 							],
 							"query": [
 								{
