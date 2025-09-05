@@ -9,23 +9,21 @@ console.log('destDirectory', destDirectory);
 export const multerUpload = multer({
   storage: multer.diskStorage({
     destination: (_req, _file, cb) => {
-      cb(null, destDirectory); // تحديد المكان الذي يتم فيه تخزين الصور
+      cb(null, destDirectory);
     },
     filename: (_req: any, file: any, cb: any) => {
-      // إنشاء اسم فريد للملف باستخدام الوقت الحالي وبعض الأرقام العشوائية
       const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`;
-      cb(null, uniqueName); // تحديد اسم الملف
+      cb(null, uniqueName);
     }
   }),
   limits: {
-    fileSize: 1024 * 1024 * 5 // الحد الأقصى لحجم الملف هو 5MB
+    fileSize: 1024 * 1024 * 5 
   },
   fileFilter: (req, file, cb) => {
-    // التأكد من أن نوع الملف هو صورة
     if (file.mimetype.startsWith('image/')) {
-      cb(null, true); // إذا كان النوع "image/*"
+      cb(null, true)
     } else {
-      cb(new Error('The file type is not supported')); // إذا كان النوع غير مدعوم
+      cb(new Error('The file type is not supported')); 
     }
   }
 });

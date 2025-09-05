@@ -33,6 +33,8 @@ export class CourseController {
 
   public createCourse = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log('Request body:', req.body);
+      console.log('Request file:', req.file);
       const parsed = CreateCourseDTOSchema.safeParse(req.body);
       console.log('Parsed create data:', parsed);
       if (!parsed.success) {
@@ -41,6 +43,7 @@ export class CourseController {
 
       const { title, description } = parsed.data;
       const image = req.file ? req.file.filename : '';
+      console.log('Image for new course:', image);
       const createdBy = req.user?.id || '';
      console.log('User creating course:', createdBy);
       const newCourse = await this._courseService.createCourse(title, description, createdBy, image);
@@ -86,7 +89,7 @@ updateCourse = async (req: Request, res: Response, next: NextFunction) => {
 
     
     const image = req.file ? req.file.filename : existingCourse.image;
-
+      console.log('Image for update:', image);
     const updatedCourse = await courseService.updateCourse(courseId, {
       title,
       description,
