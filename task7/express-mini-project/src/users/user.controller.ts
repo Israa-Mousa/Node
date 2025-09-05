@@ -95,7 +95,7 @@ export class UserController {
 
   // create COACH
   createCoachUser = async (req: Request, res: Response) => {
-    console.log('Request to create COACH user:', req.body);
+  
     try {
       if (!req.user) {
         throw new CustomError('Unauthenticated', 'USER', 401);

@@ -6,14 +6,13 @@ export class UserRepository {
   private users: User[] = [];
   private idCounter = 1;
 
-  // دالة تهيئة المستخدمين القدامى
   async init() {
     this.users = [
       {
         id: '1',
         name: 'Admin',
         email: 'admin@no.com',
-        password: await createArgonHash('admin123'),
+        password: await createArgonHash('12345678'),
         role: Role.ADMIN,
         createdAt: new Date('2025-01-01T10:00:00Z'),
         updatedAt: new Date('2025-01-01T10:00:00Z'),
@@ -22,7 +21,7 @@ export class UserRepository {
         id: '2',
         name: 'Belal',
         email: 'belal@example.com',
-        password: await createArgonHash('belal123'),
+        password: await createArgonHash('12345678'),
         role: Role.COACH,
         createdAt: new Date('2025-03-01T14:30:00Z'),
         updatedAt: new Date('2025-03-01T14:30:00Z'),
@@ -31,7 +30,7 @@ export class UserRepository {
         id: '3',
         name: 'israa',
         email: 'isra@gmail.com',
-        password: await createArgonHash('israa123'),
+        password: await createArgonHash('12345678'),
         role: Role.STUDENT,
         createdAt: new Date('2025-02-01T12:00:00Z'),
         updatedAt: new Date('2025-02-01T12:00:00Z'),

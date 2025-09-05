@@ -2,6 +2,7 @@ import { object } from "zod";
 import { extend } from "zod/mini";
 import { UnifiedApiErrorResponse } from "../middlewares/response.middleware";
 import { User } from "../../users/user.entity";
+import { Course } from "../../courses/course.entity";
 
 
 export type MyEnvs={
@@ -25,7 +26,9 @@ namespace Express {
  error:(data:UnifiedApiErrorResponse)=>this;
 }
 interface Request {
-      user: User |undefined
+      user: User |undefined,
+           course?: Course; 
+            file?: Express.Multer.File; 
     }
 }
 }

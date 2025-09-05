@@ -8,9 +8,14 @@ import { authRouter } from "./auth/auth.routes";
 import { responseEnhancer } from "./shared/middlewares/response.middleware";
 import { isProduction } from './config/app.config';
 import { userRepository } from "./users/user.repsitory";
+import { courseRouter } from "./courses/course.routes";
+import path from 'node:path';
+
 userRepository.init()
 const app = express();
 const PORT = getEnvOrThrow('PORT');
+const ApiRoute = '/api/v1/';
+
 
 // Apply the responseEnhancer middleware here
 app.use(responseEnhancer);
@@ -21,12 +26,26 @@ app.get("/", (_req, res) => {
   res.json({ ok: true, message: "Express + TS server is running 🎉" });
 });
 
+app.use((req, res, next) => {
+  console.log(req.path, 'is hit');
+  next();
+});
+
 console.log('process.env.xxxxx', process.env.PORT);
+app.use(
+  express.static(path.join(__dirname, 'public'), {
+    setHeaders: (res, path) => {
+      res.setHeader('cache-control', `public max-age=${5}`);
+    }
+  })
+);
 
+//app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
 // Now apply userRouter routes
-app.use('/api/v1/auth', authRouter);
+app.use(ApiRoute+'auth', authRouter);
+app.use(ApiRoute+'users', userRouter);
+app.use(ApiRoute+'courses', courseRouter);
 
-app.use('/api/v1/users', userRouter);
 
 // Error handler middleware should be at the end
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
