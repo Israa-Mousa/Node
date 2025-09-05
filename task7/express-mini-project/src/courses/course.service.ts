@@ -46,6 +46,7 @@ class CourseService {
   public deleteCourse(id: string): boolean {
     return courseRepository.delete(id);
   }
+  
     public async findById(id: string): Promise<Course | null> {
     const course = await courseRepository.findById(id);
     if (!course) return null;

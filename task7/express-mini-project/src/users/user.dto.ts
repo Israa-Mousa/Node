@@ -12,7 +12,7 @@ export type RegisterDTO = Pick<User, 'email' | 'password' | 'name' | 'role'>;
 export type RegisterResponseDTO = Omit<User, 'password'>;
 
 // Update User DTO (for updating user details)
-export type UpdateUserDTO = Partial<Pick<User, 'name' | 'email' | 'role'>>;
+export type UpdateUserDTO = Partial<Pick<User, 'name' | 'email' >>;
 
 // Get User Profile DTO (to return user profile without password)
 export type GetUserProfileDTO = Omit<User, 'password'>;
@@ -22,9 +22,16 @@ export const RegisterDTOSchema = z.object({
   name:z.string().min(3),
   email: z.string().email(),
   password: z.string().min(6),
-  role: z.nativeEnum(Role).default(Role.STUDENT), // role is optional, default is "STUDENT"
+  role: z.nativeEnum(Role).default(Role.STUDENT), 
 });
 
+export const UpdateUserDTOSchema = z.object({
+  name: z.string().min(3).optional(),
+  email: z.string().email().optional(),
+    ///password: z.string().min(6),
+
+
+});
 // Zod schema for Login DTO
 export const LoginDTOSchema = z.object({
   email: z.string().email(),

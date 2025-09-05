@@ -19,6 +19,7 @@ export class AuthController {
     res:Response<RegisterResponseDTO| string>,
     next:NextFunction
   ){
+    //only student can register
       try {
     const payloadData=zodValidation(registerDTOSchema,req.body,'AUTH');
     console.log('Validated payload:', payloadData);

@@ -58,41 +58,9 @@ export class CourseController {
     }
   };
 
-  // updateCourse = async (req: Request, res: Response, next: NextFunction) => {
-  //   try {
-  //     //const parsed = UpdateCourseDTOSchema.safeParse(req.body);
-  //     const parsed=zodValidation(UpdateCourseDTOSchema,req.body,'COURSE');
-  //     if (!parsed.success) {
-  //       return res.status(400).json({ errors: parsed.error.format() });
-  //     }
 
-  //     const image = req.file ? req.file.filename : undefined;
-
-  //     if (!req.params.id) {
-  //       return res.status(400).json({ error: 'Course ID is required' });
-  //     }
-
-  //     const { title, description } = parsed.data;
-  //    // const createdBy = req.user?.id || '';
-  //     const updatedCourse = await courseService.updateCourse(req.params.id, {
-  //       title,
-  //       description,
-  //      // createdBy,
-  //       image,
-  //     });
-
-  //     if (!updatedCourse) {
-  //       throw new CustomError('Course not found', 'COURSE', 404);
-  //     }
-
-  //     res.create(updatedCourse);
-  //   } catch (error) {
-  //     handleError(error, res);
-  //   }
-  // };
 updateCourse = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // التحقق من صحة البيانات
     const parsed = zodValidation(UpdateCourseDTOSchema, req.body, 'COURSE');
      console.log('Parsed update data:', parsed);
     const { title, description } = parsed;
@@ -142,19 +110,42 @@ updateCourse = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-  deleteCourse = (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const id = req.params.id;
-      if (!id) return res.status(400).json({ error: 'ID required' });
-      const deleted = this._courseService.deleteCourse(id);
-      if (!deleted) {
-        throw new CustomError('Course not found', 'COURSE', 404);
-      }
-      res.ok({});
-    } catch (error) {
-      handleError(error, res);
+deleteCourse = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+    if (!id) {
+      return res.status(400).json({ error: 'ID required' });
     }
-  };
+
+    const existingCourse = await this._courseService.findById(id);
+    if (!existingCourse) {
+      throw new CustomError('Course not found', 'COURSE', 404);
+    }
+
+    const user = req.user;
+    if (!user) {
+      throw new CustomError('Unauthorized', 'AUTH', 401);
+    }
+
+    if (user.role === 'COACH' && existingCourse.createdBy !== user.id) {
+      throw new CustomError(
+        'Forbidden: You can only delete your own courses',
+        'COURSE',
+        403
+      );
+    }
+
+    const deleted = await this._courseService.deleteCourse(id);
+    if (!deleted) {
+      throw new CustomError('Course not found', 'COURSE', 404);
+    }
+
+    res.ok({ message: 'Course deleted successfully' });
+  } catch (error) {
+    handleError(error, res);
+  }
+};
+
 }
 
 export const courseController = new CourseController();

@@ -1,7 +1,7 @@
 import { Request, Response,NextFunction } from 'express';
 import { userService } from './user.service';
 import { CustomError, handleError } from '../shared/utils/exception';
-import { RegisterDTOSchema } from './user.dto';
+import { RegisterDTOSchema, UpdateUserDTOSchema } from './user.dto';
 import { zodValidation } from '../shared/utils/zod.utill';
 
 export class UserController {
@@ -91,7 +91,11 @@ export class UserController {
       if (!req.user) {
         throw new CustomError('Unauthenticated', 'USER', 401);
       }
-     const parsed = RegisterDTOSchema.safeParse(req.body);
+     const parsed = UpdateUserDTOSchema.safeParse(req.body);
+       //  const parsed = zodValidation(UpdateUserDTOSchema, req.body, 'USER');
+
+          console.log(parsed);
+     
      if (!parsed.success) {
  return res.status(400).json({
     error: 'Invalid input',
@@ -99,8 +103,12 @@ export class UserController {
   });
     }
       const userId = req.user.id;
-      const { name, email, role } = parsed.data;
-      const updatedUser = await this._userService.updateUser(userId, { name, email, role });
+    //  const { name, email, role } = parsed.data;
+       const { name, email } = parsed.data;
+
+     // const updatedUser = await this._userService.updateUser(userId, { name, email, role });
+           const updatedUser = await this._userService.updateUser(userId, { name, email });
+
       if (!updatedUser) {
         throw new CustomError('User not found', 'USER', 404);
       }
@@ -124,6 +132,7 @@ export class UserController {
 
       const { name, email, password } = req.body;
       const newCoach = await this._userService.createUser(name, email, password, 'COACH');
+      
       res.create(newCoach); 
     } catch (error) {
       handleError(error, res); 

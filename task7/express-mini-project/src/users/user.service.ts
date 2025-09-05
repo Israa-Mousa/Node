@@ -25,8 +25,10 @@ class UserService {
       throw new CustomError('User not found', 'USER', 404);
     }
 
-    const userRole = Role[updateData.role as keyof typeof Role] || user.role;
-    const updatedUser = await userRepository.update(id, updateData.email || user.email, updateData.name || user.name, userRole);
+    //const userRole = Role[updateData.role as keyof typeof Role] || user.role;
+   // const updatedUser = await userRepository.update(id, updateData.email || user.email, updateData.name || user.name, userRole);
+       const updatedUser = await userRepository.update(id, updateData.email || user.email, updateData.name || user.name);
+
     if (!updatedUser) {
       throw new CustomError('Failed to update user', 'USER', 500);
     }
