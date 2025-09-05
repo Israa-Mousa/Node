@@ -23,7 +23,7 @@ export class AuthController {
     const payloadData=zodValidation(registerDTOSchema,req.body,'AUTH');
     console.log('Validated payload:', payloadData);
     const userData = await this.authService.register(payloadData);
-    // const userWithoutPassword = removeFields(userData, ['password']);
+   // const userWithoutPassword = removeFields(userData, ['password']);
 
      res.create(userData);
    } 

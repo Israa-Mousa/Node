@@ -80,6 +80,11 @@ class UserService {
       console.log('Checking if user exists with ID:', id);
    return !! userRepository.findById(id);
   }
+  
+  public async findById(id: string) {
+  return userRepository.findById(id);
+}
+
 }
 
 export const userService = new UserService();

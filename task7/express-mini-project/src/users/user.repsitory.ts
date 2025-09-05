@@ -58,7 +58,7 @@ export class UserRepository {
     originalPassword: string,
     role: Role
   ): Promise<User> {
-    const password = await createArgonHash(originalPassword); // تشفير كلمة المرور
+    const password = await createArgonHash(originalPassword); 
     const user: User = {
       id: this.idCounter.toString(),
       name,

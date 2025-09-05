@@ -37,6 +37,7 @@ export class UserController {
     }
   };
 
+//create studnet user
   createUser = async (req: Request, res: Response) => {
      try {
        const parsed = RegisterDTOSchema.safeParse(req.body);
@@ -49,7 +50,7 @@ export class UserController {
   });    }
            const { name, email, password, role } = parsed.data;
 
-      const user = await this._userService.createUser(name, email, password, role);
+      const user = await this._userService.createUser(name, email, password);
       res.create(user);
     } catch (error) {
       handleError(error, res);
@@ -71,7 +72,7 @@ export class UserController {
       handleError(error, res); 
     }
   };
-
+ 
  getCurrentUser = (req: Request, res: Response) => {
  try {
       const user = req.user;  

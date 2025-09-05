@@ -18,7 +18,6 @@ export class AuthService {
     );
 
    return userData;
-    // return removeFields(userData, ['password']);
   }
 public async login(payload: LoginDTO): Promise<User | null> {
   const foundUser = await this._userService.findByEmail(payload.email);

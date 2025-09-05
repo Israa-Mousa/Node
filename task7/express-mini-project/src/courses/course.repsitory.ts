@@ -6,7 +6,7 @@ export class CourseRepository {
       id: '1',
       title: 'Node.js',
       description: 'Description for Node.js',
-      createdBy: 'Admin',
+      createdBy: '1',
      // image: 'course1.jpg',
       createdAt: new Date(),
       updatedAt: new Date()
@@ -15,7 +15,7 @@ export class CourseRepository {
       id: '2',
       title: 'Express',
       description: 'Description Express',
-      createdBy: 'Admin',
+      createdBy: '2',
       // image: 'course2.jpg',
       createdAt: new Date(),
       updatedAt: new Date()
