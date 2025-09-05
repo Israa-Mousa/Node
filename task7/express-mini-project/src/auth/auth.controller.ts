@@ -7,6 +7,7 @@ import { CustomError } from '../shared/utils/exception';
 import { MODULES_NAMES } from '../shared/utils/constant';
 import { signJwt } from '../shared/utils/jwt.utils';
 import { loginDTOSchema, registerDTOSchema } from './auth.schema';
+import { removeFields } from '../shared/utils/object.util';
 
 
 export class AuthController {
@@ -20,15 +21,17 @@ export class AuthController {
   ){
       try {
     const payloadData=zodValidation(registerDTOSchema,req.body,'AUTH');
-    const user = await this.authService.register(req.body);
-    console.log("user",user);
-     res.create(user);
+    console.log('Validated payload:', payloadData);
+    const userData = await this.authService.register(payloadData);
+    // const userWithoutPassword = removeFields(userData, ['password']);
+
+     res.create(userData);
    } 
     catch (error) { 
         return new CustomError.handleError(error,res,next,MODULES_NAMES.auth);
     }
-}
-
+} 
+ 
 
     //we user jwt to login
     public async login(req:Request<StringObject,StringObject,LoginDTO>,

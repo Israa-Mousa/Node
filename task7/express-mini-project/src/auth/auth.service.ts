@@ -1,5 +1,5 @@
 import { LoginDTO, LoginResponseDTO, RegisterDTO, RegisterResponseDTO } from './types/auth.dto';
-
+import { RegisterDTOSchema } from '../users/user.dto';
 import { User } from '../users/user.entity';       
 import { userService } from '../users/user.service';
 import { createArgonHash, verifyArgonHash } from '../shared/utils/argon.utils';
@@ -8,15 +8,17 @@ import is from 'zod/v4/locales/is.js';
 export class AuthService {
   private _userService = userService;
   
- public async register(payload: RegisterDTO): Promise<RegisterResponseDTO> {
+ public async register(
+  payload: RegisterDTO): Promise<RegisterResponseDTO> {
 
     const userData = this._userService.createUser(
       payload.name,
       payload.email,
-      payload.password,
+      payload.password, 
     );
+
    return userData;
-    //return removeFields(userData, ['password']);
+    // return removeFields(userData, ['password']);
   }
 public async login(payload: LoginDTO): Promise<User | null> {
   const foundUser = await this._userService.findByEmail(payload.email);

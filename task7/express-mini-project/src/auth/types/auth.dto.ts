@@ -1,21 +1,21 @@
-import { User } from  '../../users/user.entity';
-export type RegisterDTO = Pick<User, 'email' | 'password' | 'name' >;
+import { User } from '../../users/user.entity';
 
+// Login DTO
 export type LoginDTO = {
   email: string;
   password: string;
 };
-// we only used jwt in login response
-export type LoginResponseDTO={
-data:Omit<User,'password'>;
-token:string;
-}
 
-export type UpdateUserProfileDTO = Partial<Pick<User, 'name' | 'email' >>;
+// Login Response DTO (returns user data without password)
+export type LoginResponseDTO = Omit<User, 'password'>;
 
-export type GetUserProfileDTO = Omit<User, 'password'>;
+// Register DTO for creating a new user (including role)
+export type RegisterDTO = {
+  email: string;
+  password: string;
+  name: string;
+  role: string;
+};
 
-export type UserResponseDTO = Omit<User, 'password'>;
-export type RegisterResponseDTO=Omit<User,'password'>;
-
-
+// Register Response DTO (returns user data without password)
+export type RegisterResponseDTO = Omit<User, 'password'>;

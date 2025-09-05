@@ -1,6 +1,8 @@
 import { Request, Response,NextFunction } from 'express';
 import { userService } from './user.service';
 import { CustomError, handleError } from '../shared/utils/exception';
+import { RegisterDTOSchema } from './user.dto';
+import { zodValidation } from '../shared/utils/zod.utill';
 
 export class UserController {
   private _userService = userService;
@@ -37,7 +39,16 @@ export class UserController {
 
   createUser = async (req: Request, res: Response) => {
      try {
-      const { name, email, password, role } = req.body;
+       const parsed = RegisterDTOSchema.safeParse(req.body);
+            //const parsed = zodValidation(RegisterDTOSchema, req.body, 'AUTH');
+     if (!parsed.success) {
+
+ return res.status(400).json({
+    error: 'Invalid input',
+    details: parsed.error
+  });    }
+           const { name, email, password, role } = parsed.data;
+
       const user = await this._userService.createUser(name, email, password, role);
       res.create(user);
     } catch (error) {
@@ -79,9 +90,15 @@ export class UserController {
       if (!req.user) {
         throw new CustomError('Unauthenticated', 'USER', 401);
       }
-
+     const parsed = RegisterDTOSchema.safeParse(req.body);
+     if (!parsed.success) {
+ return res.status(400).json({
+    error: 'Invalid input',
+    details: parsed.error
+  });
+    }
       const userId = req.user.id;
-      const { name, email, role } = req.body;
+      const { name, email, role } = parsed.data;
       const updatedUser = await this._userService.updateUser(userId, { name, email, role });
       if (!updatedUser) {
         throw new CustomError('User not found', 'USER', 404);
