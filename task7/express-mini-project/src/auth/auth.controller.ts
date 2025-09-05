@@ -41,7 +41,7 @@ export class AuthController {
     send("Invalid credentials");
     return ;
    } 
-const token=signJwt({sub:userData.data.id,name:userData.data.name});
+const token=signJwt({sub:userData.id,name:userData.name});
    //res.json({data:userData,token});
    res.ok({user:userData,token});
   }

@@ -2,6 +2,7 @@ import { User } from "./user.entity";
 import { Role } from "./role.enum";
 import { userRepository } from "./user.repsitory";
 import argon2 from "argon2";
+import { CustomError } from "../shared/utils/exception";
 
 class UserService {
   getUsers(page: number, limit: number): User[] {
@@ -11,11 +12,24 @@ class UserService {
   getUser(id: string): User | undefined {
     return userRepository.findById(id);
   }
-    public findByEmail(email:string){
-    return  userRepository.findByEmail(email);
 
+   findByEmail(email:string){
+    return  userRepository.findByEmail(email);
   }
 
+ async updateUser(id: string, updateData: Partial<User>): Promise<User | undefined> {
+    const user = userRepository.findById(id);
+    if (!user) {
+      throw new CustomError('User not found', 'USER', 404);
+    }
+
+    const userRole = Role[updateData.role as keyof typeof Role] || user.role;
+    const updatedUser = await userRepository.update(id, updateData.email || user.email, updateData.name || user.name, userRole);
+    if (!updatedUser) {
+      throw new CustomError('Failed to update user', 'USER', 500);
+    }
+    return updatedUser;
+  }
   async createUser(name: string, email: string, password: string, role: string = "STUDENT"): Promise<User> {
     const userRole = Role[role as keyof typeof Role] || Role.STUDENT;
     const newUser: User = {
@@ -27,27 +41,15 @@ class UserService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-       // const hashedPassword = await argon2.hash(password); 
-       const user=userRepository.create( name,email,password,userRole);
-       console.log('Created user:', user);
+     const user=userRepository.create( name,email,password,userRole);
     return user
-  }
-
-  updateUser(id: string, name: string, email: string, role: string): User | null {
-    const user = userRepository.findById(id);
-    const userRole = Role[role as keyof typeof Role] || Role.STUDENT;
-    if (!user) return null;
-    user.name = name;
-    user.email = email;
-    user.updatedAt = new Date();
-    user.role = userRole;
-    return userRepository.update(id, name,email,userRole);
   }
 
   deleteUser(id: string): boolean {
     return userRepository.delete(id);
   }
     isUserIdExist(id:string):boolean{
+      console.log('Checking if user exists with ID:', id);
    return !! userRepository.findById(id);
   }
 }

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { userService } from './user.service';
+import { CustomError } from '../shared/utils/exception';
 
 export class UserController {
   private _userService = userService;
@@ -8,6 +9,8 @@ export class UserController {
     req: Request<{}, {}, {}, { page: string; limit: string }>,
     res: Response
   ) => {
+        console.log('UserController - getUsers');
+
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     const users = this._userService.getUsers(page, limit);
@@ -37,18 +40,6 @@ export class UserController {
     res.create(user);
   };
 
-  updateUser = (req: Request, res: Response) => {
-    const id = req.params.id;
-    if (!id) return res.status(400).json({ error: 'ID required' });
-
-    const { name, email,role } = req.body;
-    const user = this._userService.updateUser(id, name, email,role);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    res.create(user);
-  };
 
   deleteUser = (req: Request, res: Response) => {
     const id = req.params.id;
@@ -61,4 +52,44 @@ export class UserController {
     
     res.ok({});
   };
+
+ getCurrentUser = (req: Request, res: Response) => {
+  console.log('req.user', req.user);
+  const user = req.user;  
+  if (!user) {
+    throw new CustomError('User does not exist', 'USER', 404);  
+  }
+     res.ok(user);
+
+};
+
+// Update user profile
+ updateUser = async (req: Request, res: Response) => {
+  console.log('update.user', req.user);
+  if (!req.user) {
+    throw new CustomError('Unauthenticated', 'USER', 401);
+  }
+  const userId = req.user.id
+  const { name, email, role } = req.body;
+  const updatedUser = await userService.updateUser(userId, { name, email, role });
+  if (!updatedUser) {
+    throw new CustomError('User not found', 'USER', 404);
+  }
+
+  res.json(updatedUser);
+};
+
+// Create a COACH user
+createCoachUser = async (req: Request, res: Response) => {
+  if (!req.user) {
+    throw new CustomError('Unauthenticated', 'USER', 401);
+  }
+  if (req.user.role !== 'ADMIN') {
+    throw new CustomError('Unauthorized', 'USER', 403);
+  }
+
+  const { name, email, password } = req.body;
+  const newCoach = await userService.createUser(name, email, password, 'COACH');
+  res.status(201).json(newCoach);
+};
 }

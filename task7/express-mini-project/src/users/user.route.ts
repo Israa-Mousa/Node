@@ -7,16 +7,12 @@ console.log('UserController',UserController);
 const router = Router();
 const userController = new UserController();
 
-///router.use(isAuthenticated);  // Make sure the user is authenticated before accessing user routes
+///router.use(isAuthenticated);  
 
 router.get('/', userController.getUsers);
 
-router.get('/:id', userController.getUser);
-
-router.post('/', userController.createUser);
-
-router.patch('/:id', userController.updateUser);
-
-router.delete('/:id', userController.deleteUser);
-
+// router.delete('/:id', userController.deleteUser);
+router.get('/me', isAuthenticated, userController.getCurrentUser); 
+router.put('/me', isAuthenticated, userController.updateUser);     
+router.post('/coach', isAuthenticated,userController.createCoachUser); 
 export const userRouter = router;

@@ -1,6 +1,7 @@
 import { object } from "zod";
 import { extend } from "zod/mini";
 import { UnifiedApiErrorResponse } from "../middlewares/response.middleware";
+import { User } from "../../users/user.entity";
 
 
 export type MyEnvs={
@@ -23,6 +24,9 @@ namespace Express {
   ok:(data:object)=>this ,
  error:(data:UnifiedApiErrorResponse)=>this;
 }
+interface Request {
+      user: User |undefined
+    }
 }
 }
 
