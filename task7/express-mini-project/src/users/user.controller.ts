@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
+import { Request, Response,NextFunction } from 'express';
 import { userService } from './user.service';
-import { CustomError } from '../shared/utils/exception';
+import { CustomError, handleError } from '../shared/utils/exception';
 
 export class UserController {
   private _userService = userService;
@@ -9,87 +9,107 @@ export class UserController {
     req: Request<{}, {}, {}, { page: string; limit: string }>,
     res: Response
   ) => {
-        console.log('UserController - getUsers');
-
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
-    const users = this._userService.getUsers(page, limit);
-    console.log('users', users);
-    res.ok(users);
+        try {
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 10;
+      const users = this._userService.getUsers(page, limit);
+      res.ok(users);
+    } catch (error) {
+ handleError(error, res);  
+  }
+  
   };
 
-  getUser = (req: Request<{ id: string }>, res: Response) => {
-    console.log('req.params', req.params);
-    const id = req.params.id;
-    console.log('id', id);
-    if (!id) return res.status(400).json({ error: 'ID required' });
+  getUser =async (req: Request<{ id: string }>, res: Response) => {
+   try {
+      const id = req.params.id;
+      if (!id) return res.status(400).json({ error: 'ID required' });
 
-    const user = this._userService.getUser(id);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      const user = await this._userService.getUser(id);
+      if (!user) {
+        throw new CustomError('User not found', 'USER', 404);
+      }
+      res.ok(user);
+    } catch (error) {
+      handleError(error, res);
     }
-
-    res.ok(user);
   };
 
   createUser = async (req: Request, res: Response) => {
-    console.log('req.body', req.body);
-    const { name, email, password,role } = req.body;
-    const user = await  this._userService.createUser(name, email, password,role);
-    console.log('user', user);
-    res.create(user);
+     try {
+      const { name, email, password, role } = req.body;
+      const user = await this._userService.createUser(name, email, password, role);
+      res.create(user);
+    } catch (error) {
+      handleError(error, res);
+    }
   };
 
 
-  deleteUser = (req: Request, res: Response) => {
-    const id = req.params.id;
-    if (!id) return res.status(400).json({ error: 'ID required' });
+  deleteUser = async(req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      if (!id) return res.status(400).json({ error: 'ID required' });
 
-    const deleted = this._userService.deleteUser(id);
-    if (!deleted) {
-      return res.status(404).json({ error: 'User not found' });
+      const deleted = await this._userService.deleteUser(id);
+      if (!deleted) {
+        throw new CustomError('User not found', 'USER', 404);
+      }
+      res.ok({});
+    } catch (error) {
+      handleError(error, res); 
     }
-    
-    res.ok({});
   };
 
  getCurrentUser = (req: Request, res: Response) => {
-  console.log('req.user', req.user);
-  const user = req.user;  
-  if (!user) {
-    throw new CustomError('User does not exist', 'USER', 404);  
-  }
-     res.ok(user);
-
-};
+ try {
+      const user = req.user;  
+      if (!user) {
+        throw new CustomError('User does not exist', 'USER', 404);  
+      }
+      res.ok(user); 
+    } catch (error) {
+      handleError(error, res);
+    }
+  };
 
 // Update user profile
- updateUser = async (req: Request, res: Response) => {
-  console.log('update.user', req.user);
-  if (!req.user) {
-    throw new CustomError('Unauthenticated', 'USER', 401);
-  }
-  const userId = req.user.id
-  const { name, email, role } = req.body;
-  const updatedUser = await userService.updateUser(userId, { name, email, role });
-  if (!updatedUser) {
-    throw new CustomError('User not found', 'USER', 404);
-  }
+  updateUser = async (req: Request, res: Response) => {
+    try {
+      if (!req.user) {
+        throw new CustomError('Unauthenticated', 'USER', 401);
+      }
 
-  res.json(updatedUser);
-};
+      const userId = req.user.id;
+      const { name, email, role } = req.body;
+      const updatedUser = await this._userService.updateUser(userId, { name, email, role });
+      if (!updatedUser) {
+        throw new CustomError('User not found', 'USER', 404);
+      }
 
-// Create a COACH user
-createCoachUser = async (req: Request, res: Response) => {
-  if (!req.user) {
-    throw new CustomError('Unauthenticated', 'USER', 401);
-  }
-  if (req.user.role !== 'ADMIN') {
-    throw new CustomError('Unauthorized', 'USER', 403);
-  }
+      res.create(updatedUser);
+    } catch (error) {
+      handleError(error, res); 
+    }
+  };
 
-  const { name, email, password } = req.body;
-  const newCoach = await userService.createUser(name, email, password, 'COACH');
-  res.status(201).json(newCoach);
-};
+  // create COACH
+  createCoachUser = async (req: Request, res: Response) => {
+    console.log('Request to create COACH user:', req.body);
+    try {
+      if (!req.user) {
+        throw new CustomError('Unauthenticated', 'USER', 401);
+      }
+      if (req.user.role !== 'ADMIN') {
+        throw new CustomError('Unauthorized', 'USER', 403);
+      }
+
+      const { name, email, password } = req.body;
+      const newCoach = await this._userService.createUser(name, email, password, 'COACH');
+      res.create(newCoach); 
+    } catch (error) {
+      handleError(error, res); 
+    }
+  };
 }
+export const userController = new UserController();

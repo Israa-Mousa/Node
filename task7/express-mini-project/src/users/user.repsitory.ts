@@ -13,7 +13,7 @@ export class UserRepository {
         id: '1',
         name: 'Admin',
         email: 'admin@no.com',
-        password: await createArgonHash('admin123_'),
+        password: await createArgonHash('admin123'),
         role: Role.ADMIN,
         createdAt: new Date('2025-01-01T10:00:00Z'),
         updatedAt: new Date('2025-01-01T10:00:00Z'),
